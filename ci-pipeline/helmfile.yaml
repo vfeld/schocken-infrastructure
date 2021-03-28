@@ -1,0 +1,16 @@
+releases:
+  - name: registry
+    chart: ./charts/docker-registry
+    namespace: ci
+    createNamespace: true
+  - name: tekton
+    chart: ./charts/tekton
+    namespace: tekton-pipelines
+    hooks:
+    - events: ["prepare", "cleanup"]
+      showlogs: true
+      command: "./helmify-kustomize"
+      args: ["{{`{{if eq .Event.Name \"prepare\"}}build{{else}}clean{{end}}`}}", "{{`{{.Release.Chart}}`}}", "ci-pipeline"]
+    values:
+    - chartversion: 0.1.0
+    - appverion: 0.22.0
