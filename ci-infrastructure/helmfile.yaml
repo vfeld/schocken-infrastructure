@@ -3,14 +3,15 @@ releases:
     chart: ./charts/docker-registry
     namespace: ci
     createNamespace: true
-  - name: tekton
-    chart: ./charts/tekton
+  - name: tekton-pipeline-crd
+    chart: ./charts/tekton-pipeline-crd
     namespace: tekton-pipelines
-    hooks:
-    - events: ["prepare", "cleanup"]
-      showlogs: true
-      command: "./helmify-kustomize"
-      args: ["{{`{{if eq .Event.Name \"prepare\"}}build{{else}}clean{{end}}`}}", "{{`{{.Release.Chart}}`}}", "ci-pipeline"]
-    values:
-    - chartversion: 0.1.0
-    - appverion: 0.22.0
+    createNamespace: true
+  - name: tekton-pipeline-cluster
+    chart: ./charts/tekton-pipeline-cluster
+    namespace: tekton-pipelines
+    createNamespace: true
+  - name: tekton-pipeline-instance
+    chart: ./charts/tekton-pipeline-instance
+    namespace: tekton-pipelines
+    createNamespace: true
