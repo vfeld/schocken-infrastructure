@@ -3,6 +3,10 @@ releases:
     chart: ./charts/docker-registry
     namespace: ci
     createNamespace: true
+  - name: dind
+    chart: ./charts/dind
+    namespace: ci
+    createNamespace: true
   - name: tekton-pipeline-crd
     chart: ./charts/tekton-pipeline-crd
     namespace: tekton-pipelines
