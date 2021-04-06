@@ -14,6 +14,12 @@ spec:
       volumeMounts:
       - name: registry-vol
         mountPath: /var/lib/registry
+      - name: daemon-config
+        mountPath: /etc/docker/daemon.yaml
+        subPath: daemon.yaml
   volumes:
   - name: registry-vol
     emptyDir: {}
+  - name: daemon-config
+    configMap:
+      name: registry-daemon-config
