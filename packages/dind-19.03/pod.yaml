@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: dind
+  name: dind
+spec:
+  containers:
+    - image: docker:19.03-dind
+      name: dind
+      args:
+        - "--mtu=1440"
+      env:
+        - name: DOCKER_HOST
+          value: tcp://0.0.0.0:2375
+        - name: DOCKER_TLS_CERTDIR #Disable TLS as traffic is not going outside of network.
+          value: ""
+      volumeMounts:
+        - name: docker-dind-data-vol
+          mountPath: /var/lib/docker/
+      ports:
+        - name: daemon-port
+          containerPort: 2375
+          protocol: TCP
+      securityContext:
+        privileged: true
+  volumes:
+    - name: docker-dind-data-vol
+      emptyDir: {}

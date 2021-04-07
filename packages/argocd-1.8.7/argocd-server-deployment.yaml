@@ -1,0 +1,14 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+  template:
+    spec:
+      containers:
+        - name: argocd-server
+          image: "vfeld/argocd:v1.8.7-kustomize-4.0.5"
