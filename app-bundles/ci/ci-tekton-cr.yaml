@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ci-tekton-cr
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vfeld/schocken-infrastructure.git
+    targetRevision: HEAD
+    path: packages/tekton-0.22.0/cr
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ci
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - 000_Namespace_tekton-pipelines.yaml
+  - 001_PodSecurityPolicy_tekton-pipelines.yaml
+  - 005_Role_tekton-pipelines-controller.yaml
+  - 006_Role_tekton-pipelines-webhook.yaml
+  - 007_Role_tekton-pipelines-leader-election.yaml
+  - 008_ServiceAccount_tekton-pipelines-controller.yaml
+  - 009_ServiceAccount_tekton-pipelines-webhook.yaml
+  - 013_RoleBinding_tekton-pipelines-controller.yaml
+  - 014_RoleBinding_tekton-pipelines-webhook.yaml
+  - 015_RoleBinding_tekton-pipelines-controller-leaderelection.yaml
+  - 016_RoleBinding_tekton-pipelines-webhook-leaderelection.yaml
+  - 026_Secret_webhook-certs.yaml
+  - 027_ValidatingWebhookConfiguration_validation.webhook.pipeline.tekton.dev.yaml
+  - 028_MutatingWebhookConfiguration_webhook.pipeline.tekton.dev.yaml
+  - 029_ValidatingWebhookConfiguration_config.webhook.pipeline.tekton.dev.yaml
+  - 032_ConfigMap_config-artifact-bucket.yaml
+  - 033_ConfigMap_config-artifact-pvc.yaml
+  - 034_ConfigMap_config-defaults.yaml
+  - 035_ConfigMap_feature-flags.yaml
+  - 036_ConfigMap_config-leader-election.yaml
+  - 037_ConfigMap_config-logging.yaml
+  - 038_ConfigMap_config-observability.yaml
+  - 039_ConfigMap_config-registry-cert.yaml
+  - 040_Deployment_tekton-pipelines-controller.yaml
+  - 041_Service_tekton-pipelines-controller.yaml
+  - 042_HorizontalPodAutoscaler_tekton-pipelines-webhook.yaml
+  - 043_Deployment_tekton-pipelines-webhook.yaml
+  - 044_Service_tekton-pipelines-webhook.yaml
+  

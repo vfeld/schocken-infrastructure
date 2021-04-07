@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - 017_CustomResourceDefinition_clustertasks.tekton.dev.yaml
+  - 018_CustomResourceDefinition_conditions.tekton.dev.yaml
+  - 019_CustomResourceDefinition_images.caching.internal.knative.dev.yaml
+  - 020_CustomResourceDefinition_pipelines.tekton.dev.yaml
+  - 021_CustomResourceDefinition_pipelineruns.tekton.dev.yaml
+  - 022_CustomResourceDefinition_pipelineresources.tekton.dev.yaml
+  - 023_CustomResourceDefinition_runs.tekton.dev.yaml
+  - 024_CustomResourceDefinition_tasks.tekton.dev.yaml
+  - 025_CustomResourceDefinition_taskruns.tekton.dev.yaml
+  

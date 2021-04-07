@@ -1,0 +1,28 @@
+Top:
+  name: tekton
+  version: 0.22.0
+  sourceTemplate: https://storage.googleapis.com/tekton-releases/pipeline/previous/v{{top.version}}/release.yaml
+DefaultPackageSpec:
+  template: | 
+    apiVersion: kustomize.config.k8s.io/v1beta1
+    kind: Kustomization
+    resources:
+      {% for resource in package.resources -%}
+      - {{resource.filename}}
+      {% endfor -%}
+  defaultName: main
+  pathTemplate: "{{top.name}}-{{top.version}}/{{packageName}}"
+  filenameTemplate: "kustomization.yaml"
+  resourceSpec:
+    pathTemplate: "{{top.name}}-{{top.version}}/{{packageName}}"
+    filenameTemplate: "{{resource.index | pad3 }}_{{resource.kind}}_{{resource.name}}.yaml"
+SplitRules:
+  - matcher:
+      kind: clusterrole
+    packageName: cr
+  - matcher:
+      kind: clusterrolebinding
+    packageName: crb
+  - matcher:
+      kind: customresourcedefinition
+    packageName: crd 

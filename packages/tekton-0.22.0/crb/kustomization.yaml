@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - 010_ClusterRoleBinding_tekton-pipelines-controller-cluster-access.yaml
+  - 011_ClusterRoleBinding_tekton-pipelines-controller-tenant-access.yaml
+  - 012_ClusterRoleBinding_tekton-pipelines-webhook-cluster-access.yaml
+  
