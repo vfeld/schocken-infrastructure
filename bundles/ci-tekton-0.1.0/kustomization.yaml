@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  bundles.vfeld.net/name: ci-tekton
+  bundles.vfeld.net/version: 0.1.0
+
+bases:
+- ../../packages/tekton-0.22.0/crd
+- ../../packages/tekton-0.22.0/cr
+- ../../packages/tekton-0.22.0/crb
+- overlays/tekton-main

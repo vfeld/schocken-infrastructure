@@ -6,6 +6,9 @@ DefaultPackageSpec:
   template: | 
     apiVersion: kustomize.config.k8s.io/v1beta1
     kind: Kustomization
+    commonLabels:
+      package.vfeld.net/name: {{top.name}}
+      package.vfeld.net/version: {{top.version}}
     resources:
       {% for resource in package.resources -%}
       - {{resource.filename}}

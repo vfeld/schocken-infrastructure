@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+- ../../../../packages/tekton-0.22.0/main
+
+patchesStrategicMerge:
+- ConfigMap_config-artifact-pvc_patch.yaml
+

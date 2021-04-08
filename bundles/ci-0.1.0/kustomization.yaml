@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ci
+
+commonLabels:
+  bundle.vfeld.net/name: ci
+  bundle.vfeld.net/version: 0.1.0
+
+bases:
+- ../../packages/dind-19.03
