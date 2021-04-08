@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: registry-daemon-config
-data:
-  daemon.yaml: |
-    {
-      "insecure-registries" : ["127.0.0.1:5000"]
-    }
