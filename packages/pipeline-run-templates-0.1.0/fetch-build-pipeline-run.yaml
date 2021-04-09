@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: fetch-build-run
+spec:
+  pipelineRef:
+    name: fetch-build
+  workspaces:
+  - name: shared-data
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        storageClassName: linode-block-storage
+        resources:
+          requests:
+            storage: 1Gi
+  params:
+  - name: repo-url
+    value: https://github.com/vfeld/schocken-auth-server.git
+  - name: branch-name
+    value: main
+  - name: dockerfile 
+    value: integrations/docker/Dockerfile
+  - name: context 
+    value: . 
+  - name: destination-image 
+    value: vfeld/schocken-auth-server:0.1.0alpha1

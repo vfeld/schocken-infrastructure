@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: dind-build
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: docker, build-image, dind
+    tekton.dev/displayName: dind-build
+spec:
+  description: >-
+    This task will build a docker image using a dind service.
+    The task will build an image out of a Dockerfile.
+  params:
+  - name: image
+    description: Reference of the image docker will produce.
+  - name: builder_image
+    description: The location of the docker builder image.
+    default: docker.io/library/docker:stable@sha256:18ff92d3d31725b53fa6633d60bed323effb6d5d4588be7b547078d384e0d4bf #tag: stable
+  - name: dockerfile
+    description: Path to the Dockerfile to build.
+    default: ./Dockerfile
+  - name: context
+    description: Path to the directory to use as context.
+    default: .
+  - name: build_extra_args
+    description: Extra parameters passed for the build command when building images.
+    default: ""
+  workspaces:
+  - name: source
+  steps:
+  - name: docker-build
+    image: $(params.builder_image)
+    env:
+    # Connect to the dind container
+    - name: DOCKER_HOST
+      value: tcp://dind.ci.svc:2375
+    workingDir: $(workspaces.source.path)
+    script: |
+      docker build \
+        $(params.build_extra_args) \
+        -f $(params.dockerfile) -t $(params.image) $(params.context)

@@ -1,0 +1,67 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: fetch-build
+spec:
+  description: |
+    cat-branch-readme takes a git repository and a branch name and
+    prints the README.md file from that branch. This is an example
+    Pipeline demonstrating the following:
+      - Using the git-clone catalog Task to clone a branch
+      - Passing a cloned repo to subsequent Tasks using a Workspace.
+      - Ordering Tasks in a Pipeline using "runAfter" so that
+        git-clone completes before we try to read from the Workspace.
+      - Using a volumeClaimTemplate Volume as a Workspace.
+      - Avoiding hard-coded paths by using a Workspace's path
+        variable instead.
+  params:
+  - name: repo-url
+    type: string
+    description: The git repository URL to clone from.
+  - name: branch-name
+    type: string
+    description: The git branch to clone.
+  - name: dockerfile 
+    description: Path to the Dockerfile to build. 
+    default: ./Dockerfile 
+  - name: context 
+    description: Path to the directory to use as docker context. 
+    default: . 
+  - name: build_extra_args 
+    description: Extra parameters passed for the docker build command when building images. 
+    default: ""
+  - name: destination-image 
+    description: Reference of the image docker will produce. 
+  workspaces:
+  - name: shared-data
+    description: |
+      This workspace will receive the cloned git repo and be passed
+      to the next Task for the repo's README.md file to be read.
+  tasks:
+  - name: fetch-repo
+    taskRef:
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: shared-data
+    params:
+    - name: url
+      value: $(params.repo-url)
+    - name: revision
+      value: $(params.branch-name)
+  - name: build-image
+    runAfter: ["fetch-repo"]
+    taskRef:
+      name: dind-build
+    workspaces:
+    - name: source
+      workspace: shared-data
+    params: 
+    - name: image 
+      value: $(params.destination-image)
+    - name: dockerfile 
+      value: $(params.dockerfile)
+    - name: context 
+      value: $(params.context)
+    - name: build_extra_args 
+      value: $(params.build_extra_args)
