@@ -9,3 +9,4 @@ commonLabels:
 
 bases:
 - ../../packages/dind-19.03
+- ../../packages/pipelines-0.1.0

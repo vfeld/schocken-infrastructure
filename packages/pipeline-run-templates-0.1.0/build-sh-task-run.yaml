@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: build-sh-run
+spec:
+  taskRef:
+    name: build-sh
+  serviceAccountName: ci-admin
+  workspaces:
+  - name: source
+    emptyDir: {}

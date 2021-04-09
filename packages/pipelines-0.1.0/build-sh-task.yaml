@@ -1,0 +1,58 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-sh
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.22.0"
+    tekton.dev/tags: docker, dind, shell
+    tekton.dev/displayName: build-sh
+spec:
+  description: >-
+    This task will spawn a container one can exec into
+    for the purpose of troubleshooting build problems.
+  workspaces:
+  - name: source
+  steps:
+  - name: start-container
+    image: alpine:3.13
+    env:
+    - name: DOCKER_HOST
+      value: tcp://dind.ci.svc:2375
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    - name: POD_SERVICE_ACCOUNT
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.serviceAccountName
+    workingDir: $(workspaces.source.path)
+    script: |
+      #!/bin/sh +x
+      echo "Installing packages ..."
+      apk update 2>&1 > /dev/null
+      apk add docker git curl 2>&1 > /dev/null
+      curl -LO https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl 2>&1 > /dev/null
+      chmod +x kubectl 2>&1 > /dev/null
+      mv kubectl /usr/local/bin 2>&1 > /dev/null
+      curl -LO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.0.5/kustomize_v4.0.5_linux_amd64.tar.gz 2>&1 > /dev/null
+      tar -xzf kustomize_v4.0.5_linux_amd64.tar.gz 2>&1 > /dev/null
+      chmod +x kustomize 2>&1 > /dev/null
+      mv kustomize /usr/local/bin 2>&1 > /dev/null
+      echo "kubectl exec -i -t -n $POD_NAMESPACE  $POD_NAME -- /bin/sh" 
+      echo "Ready!"
+      while true; do sleep 10; done 2>&1 > /dev/null
