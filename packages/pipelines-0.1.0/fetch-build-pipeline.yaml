@@ -4,16 +4,8 @@ metadata:
   name: fetch-build
 spec:
   description: |
-    cat-branch-readme takes a git repository and a branch name and
-    prints the README.md file from that branch. This is an example
-    Pipeline demonstrating the following:
-      - Using the git-clone catalog Task to clone a branch
-      - Passing a cloned repo to subsequent Tasks using a Workspace.
-      - Ordering Tasks in a Pipeline using "runAfter" so that
-        git-clone completes before we try to read from the Workspace.
-      - Using a volumeClaimTemplate Volume as a Workspace.
-      - Avoiding hard-coded paths by using a Workspace's path
-        variable instead.
+    fetch and build takes a git repository, branch name and
+    a docker dockerfile and context and builds an image.
   params:
   - name: repo-url
     type: string
