@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  package.vfeld.net/name: tekton-triggers
+  package.vfeld.net/version: 0.12.1
+resources:
+  - 000_PodSecurityPolicy_tekton-triggers.yaml
+  - 003_Role_tekton-triggers-admin.yaml
+  - 004_Role_tekton-triggers-admin-webhook.yaml
+  - 005_Role_tekton-triggers-core-interceptors.yaml
+  - 006_ServiceAccount_tekton-triggers-controller.yaml
+  - 007_ServiceAccount_tekton-triggers-webhook.yaml
+  - 008_ServiceAccount_tekton-triggers-core-interceptors.yaml
+  - 012_RoleBinding_tekton-triggers-controller-admin.yaml
+  - 013_RoleBinding_tekton-triggers-webhook-admin.yaml
+  - 014_RoleBinding_tekton-triggers-core-interceptors.yaml
+  - 020_Secret_triggers-webhook-certs.yaml
+  - 021_ValidatingWebhookConfiguration_validation.webhook.triggers.tekton.dev.yaml
+  - 022_MutatingWebhookConfiguration_webhook.triggers.tekton.dev.yaml
+  - 023_ValidatingWebhookConfiguration_config.webhook.triggers.tekton.dev.yaml
+  - 026_ConfigMap_config-logging-triggers.yaml
+  - 027_ConfigMap_config-observability-triggers.yaml
+  - 028_Service_tekton-triggers-controller.yaml
+  - 029_Deployment_tekton-triggers-controller.yaml
+  - 030_Deployment_tekton-triggers-core-interceptors.yaml
+  - 031_Service_tekton-triggers-core-interceptors.yaml
+  - 032_Service_tekton-triggers-webhook.yaml
+  - 033_Deployment_tekton-triggers-webhook.yaml
+  

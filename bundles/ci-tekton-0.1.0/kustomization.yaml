@@ -10,3 +10,11 @@ bases:
 - ../../packages/tekton-0.22.0/cr
 - ../../packages/tekton-0.22.0/crb
 - overlays/tekton-main
+- ../../packages/tekton-dashboard-0.15.0/crd
+- ../../packages/tekton-dashboard-0.15.0/cr
+- ../../packages/tekton-dashboard-0.15.0/crb
+- ../../packages/tekton-dashboard-0.15.0/main
+- ../../packages/tekton-triggers-0.12.1/crd
+- ../../packages/tekton-triggers-0.12.1/cr
+- ../../packages/tekton-triggers-0.12.1/crb
+- ../../packages/tekton-triggers-0.12.1/main

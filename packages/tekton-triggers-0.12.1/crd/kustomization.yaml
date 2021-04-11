@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  package.vfeld.net/name: tekton-triggers
+  package.vfeld.net/version: 0.12.1
+resources:
+  - 015_CustomResourceDefinition_clustertriggerbindings.triggers.tekton.dev.yaml
+  - 016_CustomResourceDefinition_eventlisteners.triggers.tekton.dev.yaml
+  - 017_CustomResourceDefinition_triggers.triggers.tekton.dev.yaml
+  - 018_CustomResourceDefinition_triggerbindings.triggers.tekton.dev.yaml
+  - 019_CustomResourceDefinition_triggertemplates.triggers.tekton.dev.yaml
+  

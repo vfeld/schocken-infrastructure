@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  package.vfeld.net/name: tekton-dashboard
+  package.vfeld.net/version: 0.15.0
+resources:
+  - 002_ClusterRole_tekton-dashboard-backend.yaml
+  - 003_ClusterRole_tekton-dashboard-dashboard.yaml
+  - 004_ClusterRole_tekton-dashboard-extensions.yaml
+  - 005_ClusterRole_tekton-dashboard-pipelines.yaml
+  - 006_ClusterRole_tekton-dashboard-tenant.yaml
+  - 007_ClusterRole_tekton-dashboard-triggers.yaml
+  

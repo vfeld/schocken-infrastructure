@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  package.vfeld.net/name: tekton-triggers
+  package.vfeld.net/version: 0.12.1
+resources:
+  - 001_ClusterRole_tekton-triggers-admin.yaml
+  - 002_ClusterRole_tekton-triggers-core-interceptors.yaml
+  - 024_ClusterRole_tekton-triggers-aggregate-edit.yaml
+  - 025_ClusterRole_tekton-triggers-aggregate-view.yaml
+  

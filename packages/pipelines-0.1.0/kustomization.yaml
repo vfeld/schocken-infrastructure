@@ -9,3 +9,9 @@ resources:
 - dind-build-task.yaml
 - git-clone-task.yaml 
 - fetch-build-pipeline.yaml
+- build-sh-task.yaml
+- ci-admin-service-account.yaml
+- helm-task.yaml
+- ci-admin-role-binding.yaml
+
+

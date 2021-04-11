@@ -1,0 +1,31 @@
+Top:
+  name: tekton-triggers
+  version: 0.12.1
+  sourceTemplate: https://storage.googleapis.com/tekton-releases/triggers/previous/v{{top.version}}/release.yaml
+DefaultPackageSpec:
+  template: | 
+    apiVersion: kustomize.config.k8s.io/v1beta1
+    kind: Kustomization
+    commonLabels:
+      package.vfeld.net/name: {{top.name}}
+      package.vfeld.net/version: {{top.version}}
+    resources:
+      {% for resource in package.resources -%}
+      - {{resource.filename}}
+      {% endfor -%}
+  defaultName: main
+  pathTemplate: "{{top.name}}-{{top.version}}/{{packageName}}"
+  filenameTemplate: "kustomization.yaml"
+  resourceSpec:
+    pathTemplate: "{{top.name}}-{{top.version}}/{{packageName}}"
+    filenameTemplate: "{{resource.index | pad3 }}_{{resource.kind}}_{{resource.name}}.yaml"
+SplitRules:
+  - matcher:
+      kind: clusterrole
+    packageName: cr
+  - matcher:
+      kind: clusterrolebinding
+    packageName: crb
+  - matcher:
+      kind: customresourcedefinition
+    packageName: crd 
