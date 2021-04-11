@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: install-nginx-ingress-run
+spec:
+  taskRef:
+    name: helm
+  params:
+  - name: helm_repo
+    value: https://kubernetes.github.io/ingress-nginx
+  - name: chart_name
+    value: ingress-nginx
+  - name: chart_version
+    value: 3.29.0
+  - name: release_name
+    value: ingress_nginx
+  - name: namespace
+    value: ingress
+  - name: overwrite_values
+    value: controller.hostNetwork=true,controller.kind=DaemonSet,controller.service.type="ClusterIP"

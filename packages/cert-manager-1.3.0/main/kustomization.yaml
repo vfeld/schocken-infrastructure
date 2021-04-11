@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  package.vfeld.net/name: cert-manager
+  package.vfeld.net/version: 1.3.0
+resources:
+  - 006_Namespace_cert-manager.yaml
+  - 007_ServiceAccount_cert-manager-cainjector.yaml
+  - 008_ServiceAccount_cert-manager.yaml
+  - 009_ServiceAccount_cert-manager-webhook.yaml
+  - 030_Role_cert-manager-cainjector:leaderelection.yaml
+  - 031_Role_cert-manager:leaderelection.yaml
+  - 032_Role_cert-manager-webhook:dynamic-serving.yaml
+  - 033_RoleBinding_cert-manager-cainjector:leaderelection.yaml
+  - 034_RoleBinding_cert-manager:leaderelection.yaml
+  - 035_RoleBinding_cert-manager-webhook:dynamic-serving.yaml
+  - 036_Service_cert-manager.yaml
+  - 037_Service_cert-manager-webhook.yaml
+  - 038_Deployment_cert-manager-cainjector.yaml
+  - 039_Deployment_cert-manager.yaml
+  - 040_Deployment_cert-manager-webhook.yaml
+  - 041_MutatingWebhookConfiguration_cert-manager-webhook.yaml
+  - 042_ValidatingWebhookConfiguration_cert-manager-webhook.yaml
+  

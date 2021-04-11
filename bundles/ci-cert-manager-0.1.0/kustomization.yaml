@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  bundles.vfeld.net/name: ci-cert-manager
+  bundles.vfeld.net/version: 0.1.0
+
+bases:
+- ../../packages/cert-manager-1.3.0/crd
+- ../../packages/cert-manager-1.3.0/cr
+- ../../packages/cert-manager-1.3.0/crb
+- ../../packages/cert-manager-1.3.0/main
+
+resources:
+- cluster-issuer.yaml
