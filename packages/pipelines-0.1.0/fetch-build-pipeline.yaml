@@ -4,15 +4,15 @@ metadata:
   name: fetch-build
 spec:
   description: |
-    fetch and build takes a git repository, branch name and
+    fetch and build takes a git repository, git revision and
     a docker dockerfile and context and builds an image.
   params:
   - name: repo-url
     type: string
     description: The git repository URL to clone from.
-  - name: branch-name
+  - name: git-rev
     type: string
-    description: The git branch to clone.
+    description: The git rev to clone, e.g. branch name, tag, ...
   - name: dockerfile 
     description: Path to the Dockerfile to build. 
     default: ./Dockerfile 
@@ -40,7 +40,7 @@ spec:
     - name: url
       value: $(params.repo-url)
     - name: revision
-      value: $(params.branch-name)
+      value: $(params.git-rev)
   - name: build-image
     runAfter: ["fetch-repo"]
     taskRef:

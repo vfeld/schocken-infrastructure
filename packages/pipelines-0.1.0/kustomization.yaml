@@ -13,5 +13,8 @@ resources:
 - ci-admin-service-account.yaml
 - helm-task.yaml
 - ci-admin-role-binding.yaml
+- trigger-service-account-roles.yaml
+- fetch-build-pipeline-event-trigger.yaml
+- trigger-sealed-secret.yaml
 
 

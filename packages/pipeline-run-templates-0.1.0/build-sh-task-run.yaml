@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
   name: build-sh-run
+  namespace: ci
 spec:
   taskRef:
     name: build-sh

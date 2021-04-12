@@ -18,7 +18,7 @@ spec:
   params:
   - name: repo-url
     value: https://github.com/vfeld/schocken-auth-server.git
-  - name: branch-name
+  - name: git-rev
     value: main
   - name: dockerfile 
     value: integrations/docker/Dockerfile

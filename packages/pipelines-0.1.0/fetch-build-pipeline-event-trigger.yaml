@@ -1,0 +1,74 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: github-listener-interceptor
+spec:
+  triggers:
+    - name: github-listener
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-secret
+              secretKey: secretToken
+            eventTypes:
+              - push
+      bindings:
+        - ref: fetch-build-binding
+      template:
+        ref: fetch-build-trigger-template
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          spec:
+            serviceAccountName: tekton-triggers-sa
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: fetch-build-binding
+spec:
+  params:
+    - name: git-rev
+      value: $(body.head_commit.id)
+    - name: git-repo
+      value: $(body.repository.clone_url)
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: fetch-build-trigger-template
+spec:
+  params:
+    - name: git-repo
+    - name: git-rev
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: fetch-build-
+    spec:
+      pipelineRef:
+        name: fetch-build
+      workspaces:
+      - name: shared-data
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            storageClassName: linode-block-storage
+            resources:
+              requests:
+                storage: 10Gi
+      params:
+      - name: repo-url
+        value: $(tt.params.git-repo)
+      - name: git-rev
+        value:  $(tt.params.git-rev)
+      - name: dockerfile 
+        value: integrations/docker/Dockerfile
+      - name: context 
+        value: . 
+      - name: destination-image 
+        value: vfeld/schocken-auth-server:0.1.0alpha1-$(tt.params.git-rev)

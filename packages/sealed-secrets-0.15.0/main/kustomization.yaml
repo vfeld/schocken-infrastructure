@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  package.vfeld.net/name: sealed-secrets
+  package.vfeld.net/version: 0.15.0
+resources:
+  - 000_RoleBinding_sealed-secrets-service-proxier.yaml
+  - 001_Role_sealed-secrets-key-admin.yaml
+  - 003_Deployment_sealed-secrets-controller.yaml
+  - 005_Service_sealed-secrets-controller.yaml
+  - 007_ServiceAccount_sealed-secrets-controller.yaml
+  - 008_Role_sealed-secrets-service-proxier.yaml
+  - 009_RoleBinding_sealed-secrets-controller.yaml
+  
