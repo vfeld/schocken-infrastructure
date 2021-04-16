@@ -1,0 +1,72 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ci-ca
+  namespace: ci
+spec:
+  isCA: true
+  duration: 880000h
+  commonName: ci-certificate-authority
+  secretName: ci-certificate-authority
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ci-certificate-authority
+  namespace: ci
+spec:
+  ca:
+    secretName: ci-certificate-authority
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: registry-tls-certificate
+  namespace: ci
+spec:
+  commonName: registry.ci.svc.cluster.local
+  duration: 880000h
+  secretName: registry-tls-certificate
+  issuerRef:
+    name: ci-certificate-authority
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: docker-auth-tls-certificate
+  namespace: ci
+spec:
+  commonName: docker-auth.ci.svc.cluster.local
+  duration: 880000h
+  secretName: docker-auth-tls-certificate
+  issuerRef:
+    name: ci-certificate-authority
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: docker-auth-token-certificate
+  namespace: ci
+spec:
+  commonName: docker-auth-token-service
+  duration: 880000h
+  secretName: docker-auth-token-certificate
+  issuerRef:
+    name: ci-certificate-authority
+    kind: Issuer
+    group: cert-manager.io

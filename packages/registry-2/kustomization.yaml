@@ -1,11 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-commonLabels:
+namespace: ci
+
+commonAnnotations:
   package.vfeld.net/name: registry
-  package.vfeld.net/version: 2
+  package.vfeld.net/version: "2"
 
 resources:
-- pod.yaml
-- service.yaml
-- daemon-config.yaml 
+- docker-auth-config.yaml
+- docker-auth-deployment.yaml
+- docker-auth-service.yaml
+- registry-pod.yaml
+- registry-service.yaml
+#- daemon-config.yaml 

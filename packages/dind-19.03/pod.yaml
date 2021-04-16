@@ -18,6 +18,8 @@ spec:
       volumeMounts:
         - name: docker-dind-data-vol
           mountPath: /var/lib/docker/
+        - name: registry-tls-certificate
+          mountPath: "/etc/docker/certs.d/registry.ci.svc.cluster.local/"
       ports:
         - name: daemon-port
           containerPort: 2375
@@ -25,5 +27,15 @@ spec:
       securityContext:
         privileged: true
   volumes:
-    - name: docker-dind-data-vol
-      emptyDir: {}
+  - name: docker-dind-data-vol
+    emptyDir: {}
+  - name: registry-tls-certificate
+    secret:
+      secretName: registry-tls-certificate
+      items:
+        - key: ca.crt
+          path: ca.crt
+        - key: tls.crt
+          path: client.cert
+        - key: tls.key
+          path: client.key

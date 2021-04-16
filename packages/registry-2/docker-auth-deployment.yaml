@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-auth
+  labels:
+    app: docker-auth
+spec:
+  selector:
+    matchLabels:
+      app: docker-auth
+  template:
+    metadata:
+      labels:
+        app: docker-auth
+    spec:
+      containers:
+        - name: docker-auth
+          image: "cesanta/docker_auth:1.7.0"
+          args: ["--v=2", "-logtostderr", "/config/auth_config.yml"]
+          volumeMounts:
+          - name: docker-auth-config
+            mountPath: /config
+          - name: docker-auth-token-certificate
+            mountPath: /config/token/certs
+          - name: docker-auth-tls-certificate
+            mountPath: /config/tls/certs
+          ports:
+            - name: docker-auth
+              containerPort: 5001
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /
+              port: 5001
+          readinessProbe:
+            httpGet:
+              scheme: HTTPS
+              path: /
+              port: 5001
+      volumes:
+        - name: docker-auth-config
+          configMap:
+            name: docker-auth-config
+        - name: docker-auth-token-certificate
+          secret:
+            secretName: docker-auth-token-certificate
+        - name: docker-auth-tls-certificate
+          secret:
+            secretName: docker-auth-tls-certificate

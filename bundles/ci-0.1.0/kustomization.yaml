@@ -10,6 +10,8 @@ commonLabels:
 bases:
 - ../../packages/dind-19.03
 - ../../packages/pipelines-0.1.0
+- ../../packages/registry-2
 
 resources:
 - ci-ingress-tls.yaml
+- ci-certificate-authority.yaml

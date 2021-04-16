@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-auth-config
+data:
+  auth_config.yml: |
+    server:
+      addr: ":5001"
+      certificate: "/config/tls/certs/tls.crt"
+      key: "/config/tls/certs/tls.key"
+    token:
+      issuer: "docker-auth-token-service"  # Must match issuer in the Registry config.
+      expiration: 900 # in seconds
+      certificate: "/config/token/certs/tls.crt"
+      key: "/config/token/certs/tls.key"
+    users:
+      "": {} # Allow anonymous (no "docker login") access
+    acl:
+      - match: { account: "" }
+        actions: ["*"]
+        comment: "Anonymous users can do everything"
