@@ -17,4 +17,4 @@ mkdir -p /tmp/registry/certs
 kubectl get secret -n ci  registry-tls-certificate -o jsonpath="{.data}" | jq -r '."ca.crt"' | base64 -d > /tmp/registry/certs/ca.crt
 kubectl get secret -n ci  registry-tls-certificate -o jsonpath="{.data}" | jq -r '."tls.crt"' | base64 -d > /tmp/registry/certs/client.cert
 kubectl get secret -n ci  registry-tls-certificate -o jsonpath="{.data}" | jq -r '."tls.key"' | base64 -d > /tmp/registry/certs/client.key
-GODEBUG=x509ignoreCN=0 skopeo list-tags --cert-dir /tmp/registry/certs docker://registry.ci.svc.cluster.local/vfeld/hello-world
+skopeo list-tags --cert-dir /tmp/registry/certs docker://registry.ci.svc.cluster.local/vfeld/hello-world

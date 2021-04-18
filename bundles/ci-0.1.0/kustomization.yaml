@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: ci
 
-commonLabels:
+commonAnnotations:
   bundle.vfeld.net/name: ci
   bundle.vfeld.net/version: 0.1.0
 

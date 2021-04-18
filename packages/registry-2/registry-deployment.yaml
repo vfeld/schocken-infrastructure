@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  labels:
+    app: registry
+spec:
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+        - image: registry:2
+          name: registry
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REGISTRY_AUTH_TOKEN_ISSUER
+              value: "docker-auth-token-service"
+            - name: REGISTRY_AUTH_TOKEN_AUTOREDIRECT
+              value: "false"
+            - name: REGISTRY_AUTH_TOKEN_REALM
+              value: "https://docker-auth.vfeld.net/auth"
+            - name: REGISTRY_AUTH_TOKEN_SERVICE
+              value: "registry.vfeld.net"
+            - name: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+              value: "/tokenAuthRootCertBundle/tls.crt"
+#            - name: REGISTRY_HTTP_TLS_CERTIFICATE
+#              value: "/etc/registry/certs/tls.crt"
+#            - name: REGISTRY_HTTP_TLS_KEY
+#              value: "/etc/registry/certs/tls.key"
+          volumeMounts:
+          - name: registry-vol
+            mountPath: /var/lib/registry
+          - name: token-auth-root-cert-bundle
+            mountPath: /tokenAuthRootCertBundle
+            readOnly: true
+          - name: registry-tls-certificate
+            mountPath: /etc/registry/certs
+      volumes:
+      - name: registry-vol
+        emptyDir: {}
+      - name: token-auth-root-cert-bundle
+        secret:
+          secretName: docker-auth-token-certificate
+          items:
+            - key: tls.crt
+              path: tls.crt
+      - name: registry-tls-certificate
+        secret:
+          secretName: registry-tls-certificate

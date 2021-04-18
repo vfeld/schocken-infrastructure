@@ -6,16 +6,16 @@ data:
   auth_config.yml: |
     server:
       addr: ":5001"
-      certificate: "/config/tls/certs/tls.crt"
-      key: "/config/tls/certs/tls.key"
+    #  certificate: "/config/tls/certs/tls.crt"
+    #  key: "/config/tls/certs/tls.key"
     token:
       issuer: "docker-auth-token-service"  # Must match issuer in the Registry config.
       expiration: 900 # in seconds
       certificate: "/config/token/certs/tls.crt"
       key: "/config/token/certs/tls.key"
-    users:
-      "": {} # Allow anonymous (no "docker login") access
+    ext_auth:
+      command: "/ext_auth/ext_auth.sh"
     acl:
-      - match: { account: "" }
+      - match: {account: "/.+/", name: "${account}/*"}
         actions: ["*"]
-        comment: "Anonymous users can do everything"
+        comment: "Logged in users can do everything in their repo"

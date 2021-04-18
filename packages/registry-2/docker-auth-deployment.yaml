@@ -24,18 +24,20 @@ spec:
             mountPath: /config/token/certs
           - name: docker-auth-tls-certificate
             mountPath: /config/tls/certs
+          - name: ext-auth
+            mountPath: /ext_auth/
           ports:
             - name: docker-auth
               containerPort: 5001
               protocol: TCP
           livenessProbe:
             httpGet:
-              scheme: HTTPS
+              scheme: HTTP
               path: /
               port: 5001
           readinessProbe:
             httpGet:
-              scheme: HTTPS
+              scheme: HTTP
               path: /
               port: 5001
       volumes:
@@ -48,3 +50,7 @@ spec:
         - name: docker-auth-tls-certificate
           secret:
             secretName: docker-auth-tls-certificate
+        - name: ext-auth
+          secret:
+            secretName: ext-auth
+            defaultMode: 0755

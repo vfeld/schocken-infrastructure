@@ -8,9 +8,11 @@ commonAnnotations:
   package.vfeld.net/version: "2"
 
 resources:
+- ext-auth-sealed-secret.yaml
 - docker-auth-config.yaml
 - docker-auth-deployment.yaml
 - docker-auth-service.yaml
-- registry-pod.yaml
+- registry-deployment.yaml
 - registry-service.yaml
-#- daemon-config.yaml 
+- docker-auth-ingress-tls.yaml
+- registry-ingress-tls.yaml

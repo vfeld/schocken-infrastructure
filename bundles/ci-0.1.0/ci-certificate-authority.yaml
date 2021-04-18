@@ -32,40 +32,28 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: registry-tls-certificate
-  namespace: ci
-spec:
-  commonName: registry.ci.svc.cluster.local
-  duration: 880000h
-  secretName: registry-tls-certificate
-  issuerRef:
-    name: ci-certificate-authority
-    kind: Issuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: docker-auth-tls-certificate
-  namespace: ci
-spec:
-  commonName: docker-auth.ci.svc.cluster.local
-  duration: 880000h
-  secretName: docker-auth-tls-certificate
-  issuerRef:
-    name: ci-certificate-authority
-    kind: Issuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
   name: docker-auth-token-certificate
   namespace: ci
 spec:
   commonName: docker-auth-token-service
   duration: 880000h
   secretName: docker-auth-token-certificate
+  issuerRef:
+    name: ci-certificate-authority
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dind-tls-certificate
+  namespace: ci
+spec:
+  commonName: dind.ci.svc.cluster.local
+  dnsNames: 
+  - dind.ci.svc.cluster.local
+  duration: 880000h
+  secretName: dind-tls-certificate
   issuerRef:
     name: ci-certificate-authority
     kind: Issuer

@@ -11,8 +11,6 @@ spec:
       args:
         - "--mtu=1440"
       env:
-        - name: DOCKER_HOST
-          value: tcp://0.0.0.0:2375
         - name: DOCKER_TLS_CERTDIR #Disable TLS as traffic is not going outside of network.
           value: ""
       volumeMounts:
@@ -20,6 +18,10 @@ spec:
           mountPath: /var/lib/docker/
         - name: registry-tls-certificate
           mountPath: "/etc/docker/certs.d/registry.ci.svc.cluster.local/"
+        - name: dind-tls-certificate-ca
+          mountPath: "/cert/ca/"
+        - name: dind-tls-certificate-server
+          mountPath: "/cert/server/"
       ports:
         - name: daemon-port
           containerPort: 2375
@@ -39,3 +41,17 @@ spec:
           path: client.cert
         - key: tls.key
           path: client.key
+  - name: dind-tls-certificate-ca
+    secret:
+      secretName: dind-tls-certificate
+      items:
+        - key: ca.crt
+          path: ca.pem
+  - name: dind-tls-certificate-server
+    secret:
+      secretName: dind-tls-certificate
+      items:
+        - key: tls.crt
+          path: cert.pem
+        - key: tls.key
+          path: key.pem
