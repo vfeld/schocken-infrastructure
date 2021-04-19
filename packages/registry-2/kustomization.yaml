@@ -16,3 +16,4 @@ resources:
 - registry-service.yaml
 - docker-auth-ingress-tls.yaml
 - registry-ingress-tls.yaml
+- registry-pull-seal-secret.yaml

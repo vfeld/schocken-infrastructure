@@ -10,6 +10,7 @@ resources:
 - git-clone-task.yaml 
 - fetch-build-pipeline.yaml
 - build-sh-task.yaml
+- ci-service-account.yaml
 - ci-admin-service-account.yaml
 - helm-task.yaml
 - ci-admin-role-binding.yaml
