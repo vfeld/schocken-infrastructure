@@ -51,6 +51,7 @@ spec:
     spec:
       pipelineRef:
         name: fetch-build
+      serviceAccountName: ci
       workspaces:
       - name: shared-data
         volumeClaimTemplate:
@@ -71,4 +72,4 @@ spec:
       - name: context 
         value: . 
       - name: destination-image 
-        value: vfeld/schocken-auth-server:0.1.0alpha1-$(tt.params.git-rev)
+        value: registry.vfeld.net/vfeld/schocken-auth-server:0.1.0alpha1-$(tt.params.git-rev)
