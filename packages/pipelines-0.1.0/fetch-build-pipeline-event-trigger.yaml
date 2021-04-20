@@ -32,8 +32,10 @@ spec:
   params:
     - name: git-rev
       value: $(body.head_commit.id)
-    - name: git-repo
+    - name: git-clone-url
       value: $(body.repository.clone_url)
+    - name: git-repo-name
+      value: $(body.repository.name)
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
@@ -41,7 +43,8 @@ metadata:
   name: fetch-build-trigger-template
 spec:
   params:
-    - name: git-repo
+    - name: git-clone-url
+    - name: git-repo-name
     - name: git-rev
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
@@ -64,12 +67,12 @@ spec:
                 storage: 10Gi
       params:
       - name: repo-url
-        value: $(tt.params.git-repo)
+        value: $(tt.params.git-clone-url)
       - name: git-rev
-        value:  $(tt.params.git-rev)
+        value: $(tt.params.git-rev)
+      - name: base-name
+        value: $(tt.params.git-repo-name)
       - name: dockerfile 
         value: integrations/docker/Dockerfile
       - name: context 
         value: . 
-      - name: destination-image 
-        value: registry.vfeld.net/vfeld/schocken-auth-server:0.1.0alpha1-$(tt.params.git-rev)

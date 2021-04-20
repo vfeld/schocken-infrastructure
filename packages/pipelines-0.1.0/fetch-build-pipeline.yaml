@@ -22,7 +22,7 @@ spec:
   - name: build_extra_args 
     description: Extra parameters passed for the docker build command when building images. 
     default: ""
-  - name: destination-image 
+  - name: base-name
     description: Reference of the image docker will produce. 
   workspaces:
   - name: shared-data
@@ -41,8 +41,31 @@ spec:
       value: $(params.repo-url)
     - name: revision
       value: $(params.git-rev)
-  - name: build-image
-    runAfter: ["fetch-repo"]
+  - name: get-dep-image-name
+    runAfter: ["fetch-repo"]  # Wait until the clone is done before reading the readme.
+    params:
+    - name: base-name 
+      value: $(params.base-name)
+    workspaces:
+    - name: source
+      workspace: shared-data
+    taskSpec:
+      params:
+      - name: base-name 
+      results:
+      - name: dep-image-name
+        description: The image name containing build dependencies
+      workspaces:
+      - name: source
+      steps:
+      - image: alpine
+        script: |
+          #!/bin/sh -e
+          apk update && apk add perl-utils
+          export HASH=$(shasum -a 256 $(workspaces.source.path)/Cargo.lock | cut -d ' ' -f 1)
+          echo -n registry.vfeld.net/vfeld/$(params.base-name):build_deps_$HASH | tee $(results.dep-image-name.path)
+  - name: build-dep-image
+    runAfter: ["get-dep-image-name"]
     taskRef:
       name: dind-build
     workspaces:
@@ -50,10 +73,50 @@ spec:
       workspace: shared-data
     params: 
     - name: image 
-      value: $(params.destination-image)
+      value: $(tasks.get-dep-image-name.results.dep-image-name)
     - name: dockerfile 
       value: $(params.dockerfile)
     - name: context 
       value: $(params.context)
     - name: build_extra_args 
-      value: $(params.build_extra_args)
+      value: "--target depbuilder"
+  - name: get-test-image-name
+    runAfter: ["build-dep-image"]
+    params:
+    - name: base-name 
+      value: $(params.base-name)
+    - name: git-rev 
+      value: $(params.git-rev)
+    workspaces:
+    - name: source
+      workspace: shared-data
+    taskSpec:
+      params:
+      - name: base-name 
+      - name: git-rev 
+      results:
+      - name: test-image-name
+        description: The image name containing test binaries
+      workspaces:
+      - name: source
+      steps:
+      - image: alpine
+        script: |
+          #!/bin/sh -e
+          echo -n registry.vfeld.net/vfeld/$(params.base-name):unittest_$(params.git-rev) | tee $(results.test-image-name.path)
+  - name: build-test-image
+    runAfter: ["get-test-image-name"]
+    taskRef:
+      name: dind-build
+    workspaces:
+    - name: source
+      workspace: shared-data
+    params: 
+    - name: image 
+      value: $(tasks.get-test-image-name.results.test-image-name)
+    - name: dockerfile 
+      value: $(params.dockerfile)
+    - name: context 
+      value: $(params.context)
+    - name: build_extra_args 
+      value: "--target test"
