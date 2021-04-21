@@ -4,8 +4,8 @@ metadata:
   name: fetch-build
 spec:
   description: |
-    fetch and build takes a git repository, git revision and
-    a docker dockerfile and context and builds an image.
+    The pipeline takes a git repository, git revision and
+    a docker dockerfile and context than builds an image and tests it.
   params:
   - name: repo-url
     type: string
@@ -120,3 +120,13 @@ spec:
       value: $(params.context)
     - name: build_extra_args 
       value: "--target test"
+  - name: app-unittest
+    runAfter: ["build-test-image"]
+    taskRef:
+      name: schocken-auth-server-test
+    workspaces:
+    - name: source
+      workspace: shared-data
+    params: 
+    - name: image 
+      value: $(tasks.get-test-image-name.results.test-image-name)

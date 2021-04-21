@@ -1,0 +1,62 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: schocken-auth-server-test
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: schocken-auth-server, unittest, postgres
+    tekton.dev/displayName: schocken-auth-server-test
+spec:
+  description: >-
+    This task will unittest the schocken-auth-server.
+  params:
+  - name: image
+    description: Reference of the image to test.
+  - name: postgres_image
+    description: The postgres image to use in the test.
+    default: "postgres:latest"
+  workspaces:
+  - name: source
+  steps:
+  - name: unittest
+    image: $(params.image)
+    env:
+    - name: DB_PWD
+      value: "secret"
+    - name: DB_USER
+      value: "pgadmin"
+    - name: DB_NAME
+      value: "schocken"
+    - name: DB_HOST
+      value: "localhost"
+    - name: DB_PORT
+      value: "5432"
+    - name: HOST
+      value: "localhost"
+    - name: PORT
+      value: "8080"
+    - name: DAY0_TOKEN
+      value: "12345678"
+    workingDir: $(workspaces.source.path)
+  sidecars:
+  - image: $(params.postgres_image)
+    name: postgres
+    env:
+    - name: POSTGRES_DB
+      value: "schocken"
+    - name: POSTGRES_USER
+      value: "pgadmin"
+    - name: POSTGRES_PASSWORD
+      value: "secret"
+    ports:
+    - containerPort: 5432
+    volumeMounts:
+      - mountPath: "/var/lib/postgresql/data"
+        subPath: postgres
+        name: pg-storage
+  volumes:
+  - name: pg-storage
+    emptyDir: {}
+
