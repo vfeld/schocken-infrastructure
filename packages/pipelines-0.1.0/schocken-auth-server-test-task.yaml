@@ -52,6 +52,18 @@ spec:
       value: "secret"
     ports:
     - containerPort: 5432
+    readinessProbe:
+      exec:
+        command:  
+        - pg_isready 
+        - -U 
+        - "postgres" 
+        - -h 
+        - "127.0.0.1"
+        - -p
+        - "5432"
+      initialDelaySeconds: 5
+      periodSeconds: 5
     volumeMounts:
       - mountPath: "/var/lib/postgresql/data"
         subPath: postgres
